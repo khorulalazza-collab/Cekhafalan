@@ -52,6 +52,40 @@
       box-shadow: 0 6px 18px rgba(0,0,0,.08);
     }
 
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .arabic {
+      font-size: 26px;
+      text-align: right;
+      direction: rtl;
+      margin: 15px 0;
+      font-family: 'Traditional Arabic', 'Amiri', serif;
+      line-height: 1.8;
+      color: #1a252f;
+    }
+
+    .translation {
+      font-style: italic;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     .status {
       text-align: center;
       padding: 15px;
@@ -145,6 +179,20 @@
     <p>Adzkiya Tahfidz Digital</p>
   </div>
 
+  <!-- KARTU PILIH SURAT & AYAT -->
+  <div class="card">
+    <h3>📖 Pilih Ayat Hafalan</h3>
+    <label for="surahSelect">Pilih Surat:</label>
+    <select id="surahSelect" onchange="loadAyat()"></select>
+
+    <label for="ayatSelect">Pilih Ayat:</label>
+    <select id="ayatSelect" onchange="displayAyat()"></select>
+
+    <div class="arabic" id="arabicText">Memuat data Al-Qur'an...</div>
+    <div class="translation" id="translationText"></div>
+  </div>
+
+  <!-- KARTU PEREKAM -->
   <div class="card">
 
     <div id="status" class="status">
@@ -185,6 +233,7 @@
 
   </div>
 
+  <!-- KARTU HASIL REKAMAN -->
   <div class="card">
 
     <h3>🎧 Hasil Rekaman</h3>
@@ -214,6 +263,62 @@ let audioUrl = null;
 let timerInterval = null;
 let recordingSeconds = 0;
 
+let surahList = [];
+let currentAyatList = [];
+
+// =====================================================
+// FITUR AL-QUR'AN (API)
+// =====================================================
+
+async function fetchSurah() {
+  try {
+    let res = await fetch('https://equran.id/api/v2/surat');
+    let data = await res.json();
+    surahList = data.data;
+    
+    let select = document.getElementById('surahSelect');
+    select.innerHTML = '';
+    surahList.forEach((surah) => {
+      let opt = document.createElement('option');
+      opt.value = surah.nomor;
+      opt.textContent = `${surah.nomor}. ${surah.namaLatin} (${surah.arti})`;
+      select.appendChild(opt);
+    });
+    loadAyat();
+  } catch (e) {
+    document.getElementById('arabicText').innerText = "Gagal memuat data Al-Qur'an. Periksa koneksi internet Anda.";
+  }
+}
+
+async function loadAyat() {
+  let nomorSurah = document.getElementById('surahSelect').value;
+  try {
+    let res = await fetch(`https://equran.id/api/v2/surat/${nomorSurah}`);
+    let data = await res.json();
+    currentAyatList = data.data.ayat;
+    
+    let select = document.getElementById('ayatSelect');
+    select.innerHTML = '';
+    currentAyatList.forEach((ayat) => {
+      let opt = document.createElement('option');
+      opt.value = ayat.nomorAyat;
+      opt.textContent = `Ayat ${ayat.nomorAyat}`;
+      select.appendChild(opt);
+    });
+    displayAyat();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function displayAyat() {
+  let ayatNum = document.getElementById('ayatSelect').value;
+  let selectedAyat = currentAyatList.find(a => a.nomorAyat == ayatNum);
+  if (selectedAyat) {
+    document.getElementById('arabicText').textContent = selectedAyat.teksArab;
+    document.getElementById('translationText').textContent = selectedAyat.teksIndonesia;
+  }
+}
 
 // =====================================================
 // MULAI REKAM
@@ -224,25 +329,20 @@ async function startRecording() {
   clearMessages();
 
   if (!navigator.mediaDevices) {
-
     showError(
       "❌ Browser ini tidak menyediakan akses mikrofon."
     );
-
     return;
   }
 
   if (!navigator.mediaDevices.getUserMedia) {
-
     showError(
       "❌ Browser tidak mendukung getUserMedia."
     );
-
     return;
   }
 
   try {
-
     console.log("Meminta akses mikrofon...");
 
     const stream =
@@ -259,18 +359,13 @@ async function startRecording() {
 
     mediaRecorder.ondataavailable =
       function(event) {
-
         if (event.data.size > 0) {
-
           audioChunks.push(event.data);
-
         }
-
       };
 
     mediaRecorder.onstop =
       function() {
-
         audioBlob =
           new Blob(
             audioChunks,
@@ -278,9 +373,7 @@ async function startRecording() {
           );
 
         if (audioUrl) {
-
           URL.revokeObjectURL(audioUrl);
-
         }
 
         audioUrl =
@@ -301,7 +394,6 @@ async function startRecording() {
           audioBlob.size,
           "bytes"
         );
-
       };
 
     mediaRecorder.start();
@@ -324,7 +416,6 @@ async function startRecording() {
   }
 
   catch (error) {
-
     console.error(
       "Gagal mengakses mikrofon:",
       error
@@ -332,18 +423,13 @@ async function startRecording() {
 
     showError(
       "❌ Mikrofon tidak dapat digunakan.<br><br>" +
-
       "<strong>Error:</strong> " +
       error.name +
-
       "<br><strong>Pesan:</strong> " +
       error.message
     );
-
   }
-
 }
-
 
 // =====================================================
 // STOP REKAM
@@ -352,27 +438,21 @@ async function startRecording() {
 function stopRecording() {
 
   if (!mediaRecorder) {
-
     return;
-
   }
 
   if (
     mediaRecorder.state === "recording"
   ) {
-
     mediaRecorder.stop();
-
   }
 
   if (mediaRecorder.stream) {
-
     mediaRecorder.stream
       .getTracks()
       .forEach(
         track => track.stop()
       );
-
   }
 
   document
@@ -389,44 +469,31 @@ function stopRecording() {
     "✅ Rekaman selesai";
 
   stopTimer();
-
 }
-
 
 // =====================================================
 // TIMER
 // =====================================================
 
 function startTimer() {
-
   recordingSeconds = 0;
-
   updateTimer();
 
   timerInterval =
     setInterval(
       function() {
-
         recordingSeconds++;
-
         updateTimer();
-
       },
       1000
     );
-
 }
-
 
 function stopTimer() {
-
   clearInterval(timerInterval);
-
 }
 
-
 function updateTimer() {
-
   const minutes =
     Math.floor(
       recordingSeconds / 60
@@ -441,9 +508,7 @@ function updateTimer() {
     String(minutes).padStart(2, "0")
     + ":" +
     String(seconds).padStart(2, "0");
-
 }
-
 
 // =====================================================
 // RESET
@@ -452,25 +517,19 @@ function updateTimer() {
 function resetRecording() {
 
   if (mediaRecorder) {
-
     if (
       mediaRecorder.state === "recording"
     ) {
-
       mediaRecorder.stop();
-
     }
 
     if (mediaRecorder.stream) {
-
       mediaRecorder.stream
         .getTracks()
         .forEach(
           track => track.stop()
         );
-
     }
-
   }
 
   mediaRecorder = null;
@@ -478,11 +537,8 @@ function resetRecording() {
   audioBlob = null;
 
   if (audioUrl) {
-
     URL.revokeObjectURL(audioUrl);
-
     audioUrl = null;
-
   }
 
   const player =
@@ -508,30 +564,22 @@ function resetRecording() {
   recordingSeconds = 0;
 
   updateTimer();
-
   clearMessages();
-
 }
-
 
 // =====================================================
 // PESAN
 // =====================================================
 
 function showError(message) {
-
   const box =
     document.getElementById("errorBox");
 
   box.innerHTML = message;
-
   box.style.display = "block";
-
 }
 
-
 function clearMessages() {
-
   document
     .getElementById("errorBox")
     .style.display = "none";
@@ -539,8 +587,10 @@ function clearMessages() {
   document
     .getElementById("successBox")
     .style.display = "none";
-
 }
+
+// Jalankan pemanggilan data Al-Qur'an pertama kali saat halaman dibuka
+fetchSurah();
 
 </script>
 
