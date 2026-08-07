@@ -1,598 +1,509 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Uji Rekam Hafalan</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+  <title>Cekhafalan</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #eaf6ff;
-      color: #243447;
-    }
+  <link rel="stylesheet" href="style.css">
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .header {
-      background: #25a9e8;
-      color: white;
-      padding: 25px 20px;
-      border-radius: 25px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 25px;
-    }
-
-    .header p {
-      margin: 0;
-      opacity: .9;
-    }
-
-    .card {
-      background: white;
-      border-radius: 22px;
-      padding: 22px;
-      margin-bottom: 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.08);
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-      margin-bottom: 5px;
-    }
-
-    select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      margin-bottom: 10px;
-      background: #fff;
-    }
-
-    .arabic {
-      font-size: 26px;
-      text-align: right;
-      direction: rtl;
-      margin: 15px 0;
-      font-family: 'Traditional Arabic', 'Amiri', serif;
-      line-height: 1.8;
-      color: #1a252f;
-    }
-
-    .translation {
-      font-style: italic;
-      color: #555;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .status {
-      text-align: center;
-      padding: 15px;
-      border-radius: 15px;
-      background: #f1f7fb;
-      margin-bottom: 18px;
-      font-weight: bold;
-    }
-
-    .timer {
-      text-align: center;
-      font-size: 42px;
-      font-weight: bold;
-      margin: 20px 0;
-    }
-
-    button {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 16px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .start {
-      background: #ef5b76;
-      color: white;
-    }
-
-    .stop {
-      background: #ff9f43;
-      color: white;
-    }
-
-    .reset {
-      background: #dfeaf1;
-      color: #34495e;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .recording {
-      color: #e53935;
-    }
-
-    audio {
-      width: 100%;
-      margin-top: 15px;
-    }
-
-    .error {
-      background: #ffe5e5;
-      color: #b42318;
-      padding: 15px;
-      border-radius: 15px;
-      display: none;
-      margin-top: 15px;
-      line-height: 1.5;
-    }
-
-    .success {
-      background: #e4f8ed;
-      color: #087443;
-      padding: 15px;
-      border-radius: 15px;
-      display: none;
-      margin-top: 15px;
-    }
-
-    .info {
-      font-size: 14px;
-      color: #667085;
-      line-height: 1.6;
-      margin-top: 15px;
-    }
-  </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-  <div class="header">
-    <h1>🎙️ Uji Rekam Hafalan</h1>
-    <p>Adzkiya Tahfidz Digital</p>
-  </div>
+  <!-- ========================= -->
+  <!-- BERANDA -->
+  <!-- ========================= -->
 
-  <!-- KARTU PILIH SURAT & AYAT -->
-  <div class="card">
-    <h3>📖 Pilih Ayat Hafalan</h3>
-    <label for="surahSelect">Pilih Surat:</label>
-    <select id="surahSelect" onchange="loadAyat()"></select>
+  <section id="homePage" class="page active">
 
-    <label for="ayatSelect">Pilih Ayat:</label>
-    <select id="ayatSelect" onchange="displayAyat()"></select>
+    <div class="header">
 
-    <div class="arabic" id="arabicText">Memuat data Al-Qur'an...</div>
-    <div class="translation" id="translationText"></div>
-  </div>
+      <h1>🌟 Hai, Pejuang Qur'an!</h1>
 
-  <!-- KARTU PEREKAM -->
-  <div class="card">
+      <p>
+        Yuk lanjut hafalanmu hari ini
+      </p>
 
-    <div id="status" class="status">
-      🎤 Siap merekam
     </div>
 
-    <div id="timer" class="timer">
-      00:00
+
+    <div class="card progress-box">
+
+      <h3>📊 Hafalan Hari Ini</h3>
+
+      <div class="progress-number">
+        0%
+      </div>
+
+      <div class="progress-bar">
+
+        <div
+          id="progressFill"
+          class="progress-fill">
+        </div>
+
+      </div>
+
+      <p>
+        Belum ada ayat yang diselesaikan
+      </p>
+
     </div>
 
-    <button
-      id="startBtn"
-      class="start"
-      onclick="startRecording()">
-      🎙️ MULAI REKAM
-    </button>
 
-    <button
-      id="stopBtn"
-      class="stop"
-      onclick="stopRecording()"
-      disabled>
-      ⏹️ SELESAI REKAM
-    </button>
+    <div class="card">
 
-    <button
-      id="resetBtn"
-      class="reset"
-      onclick="resetRecording()">
-      🔄 REKAM ULANG
-    </button>
+      <h3>📖 Lanjutkan Hafalan</h3>
 
-    <div id="errorBox" class="error"></div>
+      <p>
+        Al-Fatihah
+      </p>
 
-    <div id="successBox" class="success">
-      ✅ Rekaman berhasil dibuat.
+      <p>
+        Ayat 1
+      </p>
+
+      <button
+        class="btn btn-primary"
+        onclick="openTahfidz()">
+
+        ▶️ Lanjutkan Hafalan
+
+      </button>
+
     </div>
 
-  </div>
 
-  <!-- KARTU HASIL REKAMAN -->
-  <div class="card">
+    <div class="card">
 
-    <h3>🎧 Hasil Rekaman</h3>
+      <h3>🚀 Menu Belajar</h3>
 
-    <p class="info">
-      Setelah selesai merekam, suara Anda akan muncul
-      di pemutar audio berikut.
-    </p>
+      <div class="menu-grid">
 
-    <audio
-      id="audioPlayer"
-      controls
+        <button
+          class="menu-btn"
+          onclick="openTahfidz()">
+
+          <span>📖</span>
+
+          Tahfidz
+
+        </button>
+
+
+        <button
+          class="menu-btn"
+          onclick="openMurottal()">
+
+          <span>🎧</span>
+
+          Murottal
+
+        </button>
+
+
+        <button
+          class="menu-btn"
+          onclick="openRecorder()">
+
+          <span>🎙️</span>
+
+          Rekam
+
+        </button>
+
+
+        <button
+          class="menu-btn"
+          onclick="openTahfidz()">
+
+          <span>🧠</span>
+
+          Latihan
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================= -->
+  <!-- TAHFIDZ -->
+  <!-- ========================= -->
+
+  <section
+    id="tahfidzPage"
+    class="page">
+
+    <div class="header">
+
+      <h1>📖 Tahfidz</h1>
+
+      <p>
+        Latihan menghafal Al-Qur'an
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>📚 Pilih Surat</h3>
+
+      <button
+        class="btn btn-blue"
+        onclick="pilihSurat('Al-Fatihah')">
+
+        Al-Fatihah
+
+      </button>
+
+
+      <button
+        class="btn btn-blue"
+        onclick="pilihSurat('Al-Ikhlas')">
+
+        Al-Ikhlas
+
+      </button>
+
+
+      <button
+        class="btn btn-blue"
+        onclick="pilihSurat('An-Nas')">
+
+        An-Nas
+
+      </button>
+
+    </div>
+
+
+    <div
+      id="ayatBox"
+      class="card"
       style="display:none;">
-    </audio>
 
-  </div>
+      <h3 id="namaSurat">
+        Al-Fatihah
+      </h3>
+
+
+      <div
+        id="ayatText"
+        class="ayat">
+
+        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+
+      </div>
+
+
+      <button
+        class="btn btn-orange"
+        onclick="toggleAyat()">
+
+        👁️ Sembunyikan Ayat
+
+      </button>
+
+
+      <button
+        class="btn btn-blue"
+        onclick="openMurottal()">
+
+        🎧 Dengarkan Murottal
+
+      </button>
+
+
+      <button
+        class="btn btn-primary"
+        onclick="openRecorder()">
+
+        🎙️ Rekam Hafalan
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================= -->
+  <!-- MUROTTAL -->
+  <!-- ========================= -->
+
+  <section
+    id="murottalPage"
+    class="page">
+
+    <div class="header">
+
+      <h1>🎧 Murottal</h1>
+
+      <p>
+        Dengarkan sebelum menghafal
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>🎙️ Murottal Syekh</h3>
+
+      <p>
+        Audio pembanding hafalan
+      </p>
+
+
+      <div class="audio-box">
+
+        <audio
+          id="murottalPlayer"
+          controls>
+
+        </audio>
+
+      </div>
+
+
+      <p class="info">
+
+        Audio murottal akan kita masukkan
+        setelah struktur aplikasi selesai.
+
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>🔁 Metode Menghafal</h3>
+
+      <p>
+
+        1. Dengarkan ayat.
+
+      </p>
+
+      <p>
+
+        2. Perhatikan teks ayat.
+
+      </p>
+
+      <p>
+
+        3. Ulangi bersama murottal.
+
+      </p>
+
+      <p>
+
+        4. Sembunyikan ayat.
+
+      </p>
+
+      <p>
+
+        5. Rekam hafalan.
+
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================= -->
+  <!-- RECORDER -->
+  <!-- ========================= -->
+
+  <section
+    id="recorderPage"
+    class="page">
+
+    <div class="header">
+
+      <h1>🎙️ Rekam Hafalan</h1>
+
+      <p>
+        Rekam hafalanmu
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <div
+        id="recordStatus"
+        class="record-status">
+
+        🎤 Siap merekam
+
+      </div>
+
+
+      <div
+        id="recordTimer"
+        class="timer">
+
+        00:00
+
+      </div>
+
+
+      <button
+        id="startRecordBtn"
+        class="btn btn-red"
+        onclick="startRecording()">
+
+        🎙️ Mulai Rekam
+
+      </button>
+
+
+      <button
+        id="stopRecordBtn"
+        class="btn btn-orange"
+        onclick="stopRecording()"
+        disabled>
+
+        ⏹️ Selesai Rekam
+
+      </button>
+
+
+      <button
+        class="btn btn-gray"
+        onclick="resetRecording()">
+
+        🔄 Rekam Ulang
+
+      </button>
+
+
+      <div
+        id="recordResult"
+        style="display:none;">
+
+        <h3>
+          🎧 Hasil Rekaman
+        </h3>
+
+
+        <audio
+          id="recordedAudio"
+          controls>
+        </audio>
+
+      </div>
+
+
+      <div
+        id="recordError"
+        style="
+        display:none;
+        margin-top:15px;
+        padding:15px;
+        border-radius:15px;
+        background:#ffe5e5;
+        color:#b42318;
+        ">
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>💡 Cara Menghafal</h3>
+
+      <p>
+        Dengarkan ayat terlebih dahulu.
+      </p>
+
+      <p>
+        Kemudian coba membaca tanpa melihat teks.
+      </p>
+
+      <p>
+        Setelah siap, tekan tombol
+        <strong>Mulai Rekam</strong>.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================= -->
+  <!-- BOTTOM NAVIGATION -->
+  <!-- ========================= -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-btn"
+      onclick="openHome()">
+
+      🏠
+      <small>Beranda</small>
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      onclick="openTahfidz()">
+
+      📖
+      <small>Tahfidz</small>
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      onclick="openMurottal()">
+
+      🎧
+      <small>Murottal</small>
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      onclick="openRecorder()">
+
+      🎙️
+      <small>Rekam</small>
+
+    </button>
+
+  </nav>
 
 </div>
 
-<script>
 
-let mediaRecorder = null;
-let audioChunks = [];
-let audioBlob = null;
-let audioUrl = null;
-
-let timerInterval = null;
-let recordingSeconds = 0;
-
-let surahList = [];
-let currentAyatList = [];
-
-// =====================================================
-// FITUR AL-QUR'AN (API)
-// =====================================================
-
-async function fetchSurah() {
-  try {
-    let res = await fetch('https://equran.id/api/v2/surat');
-    let data = await res.json();
-    surahList = data.data;
-    
-    let select = document.getElementById('surahSelect');
-    select.innerHTML = '';
-    surahList.forEach((surah) => {
-      let opt = document.createElement('option');
-      opt.value = surah.nomor;
-      opt.textContent = `${surah.nomor}. ${surah.namaLatin} (${surah.arti})`;
-      select.appendChild(opt);
-    });
-    loadAyat();
-  } catch (e) {
-    document.getElementById('arabicText').innerText = "Gagal memuat data Al-Qur'an. Periksa koneksi internet Anda.";
-  }
-}
-
-async function loadAyat() {
-  let nomorSurah = document.getElementById('surahSelect').value;
-  try {
-    let res = await fetch(`https://equran.id/api/v2/surat/${nomorSurah}`);
-    let data = await res.json();
-    currentAyatList = data.data.ayat;
-    
-    let select = document.getElementById('ayatSelect');
-    select.innerHTML = '';
-    currentAyatList.forEach((ayat) => {
-      let opt = document.createElement('option');
-      opt.value = ayat.nomorAyat;
-      opt.textContent = `Ayat ${ayat.nomorAyat}`;
-      select.appendChild(opt);
-    });
-    displayAyat();
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-function displayAyat() {
-  let ayatNum = document.getElementById('ayatSelect').value;
-  let selectedAyat = currentAyatList.find(a => a.nomorAyat == ayatNum);
-  if (selectedAyat) {
-    document.getElementById('arabicText').textContent = selectedAyat.teksArab;
-    document.getElementById('translationText').textContent = selectedAyat.teksIndonesia;
-  }
-}
-
-// =====================================================
-// MULAI REKAM
-// =====================================================
-
-async function startRecording() {
-
-  clearMessages();
-
-  if (!navigator.mediaDevices) {
-    showError(
-      "❌ Browser ini tidak menyediakan akses mikrofon."
-    );
-    return;
-  }
-
-  if (!navigator.mediaDevices.getUserMedia) {
-    showError(
-      "❌ Browser tidak mendukung getUserMedia."
-    );
-    return;
-  }
-
-  try {
-    console.log("Meminta akses mikrofon...");
-
-    const stream =
-      await navigator.mediaDevices.getUserMedia({
-        audio: true
-      });
-
-    console.log("Mikrofon berhasil diizinkan.");
-
-    audioChunks = [];
-
-    mediaRecorder =
-      new MediaRecorder(stream);
-
-    mediaRecorder.ondataavailable =
-      function(event) {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      };
-
-    mediaRecorder.onstop =
-      function() {
-        audioBlob =
-          new Blob(
-            audioChunks,
-            { type: "audio/webm" }
-          );
-
-        if (audioUrl) {
-          URL.revokeObjectURL(audioUrl);
-        }
-
-        audioUrl =
-          URL.createObjectURL(audioBlob);
-
-        const player =
-          document.getElementById("audioPlayer");
-
-        player.src = audioUrl;
-        player.style.display = "block";
-
-        document
-          .getElementById("successBox")
-          .style.display = "block";
-
-        console.log(
-          "Rekaman selesai:",
-          audioBlob.size,
-          "bytes"
-        );
-      };
-
-    mediaRecorder.start();
-
-    document
-      .getElementById("startBtn")
-      .disabled = true;
-
-    document
-      .getElementById("stopBtn")
-      .disabled = false;
-
-    document
-      .getElementById("status")
-      .innerHTML =
-      "🔴 <span class='recording'>Sedang merekam...</span>";
-
-    startTimer();
-
-  }
-
-  catch (error) {
-    console.error(
-      "Gagal mengakses mikrofon:",
-      error
-    );
-
-    showError(
-      "❌ Mikrofon tidak dapat digunakan.<br><br>" +
-      "<strong>Error:</strong> " +
-      error.name +
-      "<br><strong>Pesan:</strong> " +
-      error.message
-    );
-  }
-}
-
-// =====================================================
-// STOP REKAM
-// =====================================================
-
-function stopRecording() {
-
-  if (!mediaRecorder) {
-    return;
-  }
-
-  if (
-    mediaRecorder.state === "recording"
-  ) {
-    mediaRecorder.stop();
-  }
-
-  if (mediaRecorder.stream) {
-    mediaRecorder.stream
-      .getTracks()
-      .forEach(
-        track => track.stop()
-      );
-  }
-
-  document
-    .getElementById("startBtn")
-    .disabled = false;
-
-  document
-    .getElementById("stopBtn")
-    .disabled = true;
-
-  document
-    .getElementById("status")
-    .innerHTML =
-    "✅ Rekaman selesai";
-
-  stopTimer();
-}
-
-// =====================================================
-// TIMER
-// =====================================================
-
-function startTimer() {
-  recordingSeconds = 0;
-  updateTimer();
-
-  timerInterval =
-    setInterval(
-      function() {
-        recordingSeconds++;
-        updateTimer();
-      },
-      1000
-    );
-}
-
-function stopTimer() {
-  clearInterval(timerInterval);
-}
-
-function updateTimer() {
-  const minutes =
-    Math.floor(
-      recordingSeconds / 60
-    );
-
-  const seconds =
-    recordingSeconds % 60;
-
-  document
-    .getElementById("timer")
-    .textContent =
-    String(minutes).padStart(2, "0")
-    + ":" +
-    String(seconds).padStart(2, "0");
-}
-
-// =====================================================
-// RESET
-// =====================================================
-
-function resetRecording() {
-
-  if (mediaRecorder) {
-    if (
-      mediaRecorder.state === "recording"
-    ) {
-      mediaRecorder.stop();
-    }
-
-    if (mediaRecorder.stream) {
-      mediaRecorder.stream
-        .getTracks()
-        .forEach(
-          track => track.stop()
-        );
-    }
-  }
-
-  mediaRecorder = null;
-  audioChunks = [];
-  audioBlob = null;
-
-  if (audioUrl) {
-    URL.revokeObjectURL(audioUrl);
-    audioUrl = null;
-  }
-
-  const player =
-    document.getElementById("audioPlayer");
-
-  player.pause();
-  player.src = "";
-  player.style.display = "none";
-
-  document
-    .getElementById("startBtn")
-    .disabled = false;
-
-  document
-    .getElementById("stopBtn")
-    .disabled = true;
-
-  document
-    .getElementById("status")
-    .innerHTML =
-    "🎤 Siap merekam";
-
-  recordingSeconds = 0;
-
-  updateTimer();
-  clearMessages();
-}
-
-// =====================================================
-// PESAN
-// =====================================================
-
-function showError(message) {
-  const box =
-    document.getElementById("errorBox");
-
-  box.innerHTML = message;
-  box.style.display = "block";
-}
-
-function clearMessages() {
-  document
-    .getElementById("errorBox")
-    .style.display = "none";
-
-  document
-    .getElementById("successBox")
-    .style.display = "none";
-}
-
-// Jalankan pemanggilan data Al-Qur'an pertama kali saat halaman dibuka
-fetchSurah();
-
-</script>
+<script src="script.js"></script>
 
 </body>
+
 </html>
