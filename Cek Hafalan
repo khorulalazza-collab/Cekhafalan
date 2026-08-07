@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Uji Rekam Hafalan</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #eaf6ff;
+      color: #243447;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: #25a9e8;
+      color: white;
+      padding: 25px 20px;
+      border-radius: 25px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 25px;
+    }
+
+    .header p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+
+    .status {
+      text-align: center;
+      padding: 15px;
+      border-radius: 15px;
+      background: #f1f7fb;
+      margin-bottom: 18px;
+      font-weight: bold;
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 42px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .start {
+      background: #ef5b76;
+      color: white;
+    }
+
+    .stop {
+      background: #ff9f43;
+      color: white;
+    }
+
+    .reset {
+      background: #dfeaf1;
+      color: #34495e;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .recording {
+      color: #e53935;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #b42318;
+      padding: 15px;
+      border-radius: 15px;
+      display: none;
+      margin-top: 15px;
+      line-height: 1.5;
+    }
+
+    .success {
+      background: #e4f8ed;
+      color: #087443;
+      padding: 15px;
+      border-radius: 15px;
+      display: none;
+      margin-top: 15px;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #667085;
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>🎙️ Uji Rekam Hafalan</h1>
+    <p>Adzkiya Tahfidz Digital</p>
+  </div>
+
+  <div class="card">
+
+    <div id="status" class="status">
+      🎤 Siap merekam
+    </div>
+
+    <div id="timer" class="timer">
+      00:00
+    </div>
+
+    <button
+      id="startBtn"
+      class="start"
+      onclick="startRecording()">
+      🎙️ MULAI REKAM
+    </button>
+
+    <button
+      id="stopBtn"
+      class="stop"
+      onclick="stopRecording()"
+      disabled>
+      ⏹️ SELESAI REKAM
+    </button>
+
+    <button
+      id="resetBtn"
+      class="reset"
+      onclick="resetRecording()">
+      🔄 REKAM ULANG
+    </button>
+
+    <div id="errorBox" class="error"></div>
+
+    <div id="successBox" class="success">
+      ✅ Rekaman berhasil dibuat.
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h3>🎧 Hasil Rekaman</h3>
+
+    <p class="info">
+      Setelah selesai merekam, suara Anda akan muncul
+      di pemutar audio berikut.
+    </p>
+
+    <audio
+      id="audioPlayer"
+      controls
+      style="display:none;">
+    </audio>
+
+  </div>
+
+</div>
+
+<script>
+
+let mediaRecorder = null;
+let audioChunks = [];
+let audioBlob = null;
+let audioUrl = null;
+
+let timerInterval = null;
+let recordingSeconds = 0;
+
+
+// =====================================================
+// MULAI REKAM
+// =====================================================
+
+async function startRecording() {
+
+  clearMessages();
+
+  if (!navigator.mediaDevices) {
+
+    showError(
+      "❌ Browser ini tidak menyediakan akses mikrofon."
+    );
+
+    return;
+  }
+
+  if (!navigator.mediaDevices.getUserMedia) {
+
+    showError(
+      "❌ Browser tidak mendukung getUserMedia."
+    );
+
+    return;
+  }
+
+  try {
+
+    console.log("Meminta akses mikrofon...");
+
+    const stream =
+      await navigator.mediaDevices.getUserMedia({
+        audio: true
+      });
+
+    console.log("Mikrofon berhasil diizinkan.");
+
+    audioChunks = [];
+
+    mediaRecorder =
+      new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable =
+      function(event) {
+
+        if (event.data.size > 0) {
+
+          audioChunks.push(event.data);
+
+        }
+
+      };
+
+    mediaRecorder.onstop =
+      function() {
+
+        audioBlob =
+          new Blob(
+            audioChunks,
+            { type: "audio/webm" }
+          );
+
+        if (audioUrl) {
+
+          URL.revokeObjectURL(audioUrl);
+
+        }
+
+        audioUrl =
+          URL.createObjectURL(audioBlob);
+
+        const player =
+          document.getElementById("audioPlayer");
+
+        player.src = audioUrl;
+        player.style.display = "block";
+
+        document
+          .getElementById("successBox")
+          .style.display = "block";
+
+        console.log(
+          "Rekaman selesai:",
+          audioBlob.size,
+          "bytes"
+        );
+
+      };
+
+    mediaRecorder.start();
+
+    document
+      .getElementById("startBtn")
+      .disabled = true;
+
+    document
+      .getElementById("stopBtn")
+      .disabled = false;
+
+    document
+      .getElementById("status")
+      .innerHTML =
+      "🔴 <span class='recording'>Sedang merekam...</span>";
+
+    startTimer();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Gagal mengakses mikrofon:",
+      error
+    );
+
+    showError(
+      "❌ Mikrofon tidak dapat digunakan.<br><br>" +
+
+      "<strong>Error:</strong> " +
+      error.name +
+
+      "<br><strong>Pesan:</strong> " +
+      error.message
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// STOP REKAM
+// =====================================================
+
+function stopRecording() {
+
+  if (!mediaRecorder) {
+
+    return;
+
+  }
+
+  if (
+    mediaRecorder.state === "recording"
+  ) {
+
+    mediaRecorder.stop();
+
+  }
+
+  if (mediaRecorder.stream) {
+
+    mediaRecorder.stream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+  }
+
+  document
+    .getElementById("startBtn")
+    .disabled = false;
+
+  document
+    .getElementById("stopBtn")
+    .disabled = true;
+
+  document
+    .getElementById("status")
+    .innerHTML =
+    "✅ Rekaman selesai";
+
+  stopTimer();
+
+}
+
+
+// =====================================================
+// TIMER
+// =====================================================
+
+function startTimer() {
+
+  recordingSeconds = 0;
+
+  updateTimer();
+
+  timerInterval =
+    setInterval(
+      function() {
+
+        recordingSeconds++;
+
+        updateTimer();
+
+      },
+      1000
+    );
+
+}
+
+
+function stopTimer() {
+
+  clearInterval(timerInterval);
+
+}
+
+
+function updateTimer() {
+
+  const minutes =
+    Math.floor(
+      recordingSeconds / 60
+    );
+
+  const seconds =
+    recordingSeconds % 60;
+
+  document
+    .getElementById("timer")
+    .textContent =
+    String(minutes).padStart(2, "0")
+    + ":" +
+    String(seconds).padStart(2, "0");
+
+}
+
+
+// =====================================================
+// RESET
+// =====================================================
+
+function resetRecording() {
+
+  if (mediaRecorder) {
+
+    if (
+      mediaRecorder.state === "recording"
+    ) {
+
+      mediaRecorder.stop();
+
+    }
+
+    if (mediaRecorder.stream) {
+
+      mediaRecorder.stream
+        .getTracks()
+        .forEach(
+          track => track.stop()
+        );
+
+    }
+
+  }
+
+  mediaRecorder = null;
+  audioChunks = [];
+  audioBlob = null;
+
+  if (audioUrl) {
+
+    URL.revokeObjectURL(audioUrl);
+
+    audioUrl = null;
+
+  }
+
+  const player =
+    document.getElementById("audioPlayer");
+
+  player.pause();
+  player.src = "";
+  player.style.display = "none";
+
+  document
+    .getElementById("startBtn")
+    .disabled = false;
+
+  document
+    .getElementById("stopBtn")
+    .disabled = true;
+
+  document
+    .getElementById("status")
+    .innerHTML =
+    "🎤 Siap merekam";
+
+  recordingSeconds = 0;
+
+  updateTimer();
+
+  clearMessages();
+
+}
+
+
+// =====================================================
+// PESAN
+// =====================================================
+
+function showError(message) {
+
+  const box =
+    document.getElementById("errorBox");
+
+  box.innerHTML = message;
+
+  box.style.display = "block";
+
+}
+
+
+function clearMessages() {
+
+  document
+    .getElementById("errorBox")
+    .style.display = "none";
+
+  document
+    .getElementById("successBox")
+    .style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
