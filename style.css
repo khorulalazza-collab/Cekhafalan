@@ -1,0 +1,231 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eaf6ff;
+  color: #263238;
+}
+
+.app {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: auto;
+  background: #f5fbff;
+  padding-bottom: 90px;
+}
+
+/* HEADER */
+
+.header {
+  padding: 22px 18px;
+  background: linear-gradient(135deg, #25aae7, #4fc3f7);
+  color: white;
+  border-radius: 0 0 28px 28px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.header p {
+  margin: 6px 0 0;
+  opacity: .9;
+}
+
+/* CARD */
+
+.card {
+  background: white;
+  margin: 16px;
+  padding: 20px;
+  border-radius: 22px;
+  box-shadow: 0 5px 18px rgba(0,0,0,.07);
+}
+
+.card h2,
+.card h3 {
+  margin-top: 0;
+}
+
+/* PROGRESS */
+
+.progress-box {
+  text-align: center;
+}
+
+.progress-number {
+  font-size: 38px;
+  font-weight: bold;
+  color: #13a8a0;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #e8eef2;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #18b7aa;
+}
+
+/* MENU */
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.menu-btn {
+  border: none;
+  border-radius: 18px;
+  padding: 20px 10px;
+  background: #eef9ff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: #263238;
+}
+
+.menu-btn span {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+/* PAGE */
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* BUTTON */
+
+.btn {
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  padding: 15px;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #20b7aa;
+  color: white;
+}
+
+.btn-blue {
+  background: #28a9e8;
+  color: white;
+}
+
+.btn-orange {
+  background: #ff9f43;
+  color: white;
+}
+
+.btn-red {
+  background: #ed5571;
+  color: white;
+}
+
+.btn-gray {
+  background: #edf1f4;
+  color: #34495e;
+}
+
+/* AYAT */
+
+.ayat {
+  direction: rtl;
+  text-align: center;
+  font-size: 32px;
+  line-height: 2;
+  padding: 20px;
+  background: #fffaf0;
+  border-radius: 18px;
+  margin: 15px 0;
+}
+
+.ayat.hidden {
+  filter: blur(12px);
+  user-select: none;
+}
+
+/* AUDIO */
+
+.audio-box {
+  background: #f2fbff;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 12px;
+}
+
+audio {
+  width: 100%;
+}
+
+/* RECORD */
+
+.record-status {
+  text-align: center;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 15px;
+  background: #f4f7f9;
+  margin-bottom: 15px;
+}
+
+.timer {
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
+  margin: 15px;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 75px;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -5px 18px rgba(0,0,0,.1);
+  z-index: 100;
+}
+
+.nav-btn {
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nav-btn small {
+  display: block;
+  font-size: 11px;
+  margin-top: 3px;
+}
