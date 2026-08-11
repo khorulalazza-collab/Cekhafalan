@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-  <title>Cekhafalan</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cekhafalan - Tahfidz Digital</title>
   <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
 <div class="app">
@@ -21,489 +13,307 @@
   <!-- ========================= -->
   <!-- BERANDA -->
   <!-- ========================= -->
-
   <section id="homePage" class="page active">
-
     <div class="header">
-
-      <h1>🌟 Hai, Pejuang Qur'an!</h1>
-
-      <p>
-        Yuk lanjut hafalanmu hari ini
-      </p>
-
+      <div class="user-greeting">
+        <span>👋 Hai, Budi!</span>
+        <small>Yuk lanjut hafalanmu hari ini</small>
+      </div>
+      <div class="stats-row">
+        <div class="stat-item"><strong>0</strong><small>Bintang</small></div>
+        <div class="stat-item"><strong>56</strong><small>Poin</small></div>
+        <div class="stat-item"><strong>1</strong><small>Peringkat</small></div>
+      </div>
     </div>
 
+    <div class="card continue-card">
+      <div class="continue-info">
+        <small class="tag">Lanjutkan</small>
+        <h3>An-Nas</h3>
+        <p>Blok 1 (Ayat 1-6)</p>
+      </div>
+      <button class="play-circle-btn" onclick="openPage('setupPage')">▶</button>
+    </div>
 
-    <div class="card progress-box">
+    <div class="card">
+      <div class="card-header-flex">
+        <h3>🚀 Menu Belajar</h3>
+      </div>
+      <div class="menu-grid">
+        <button class="menu-btn" onclick="openPage('setupPage')">
+          <span>📖</span> Tahfidz
+        </button>
+        <button class="menu-btn" onclick="openPage('murottalPage')">
+          <span>🎧</span> Murottal
+        </button>
+        <button class="menu-btn" onclick="openPage('recordPage')">
+          <span>🎙️</span> Uji Hafalan
+        </button>
+        <button class="menu-btn" onclick="openPage('jalurPage')">
+          <span>🗺️</span> Jalur Belajar
+        </button>
+      </div>
+    </div>
+  </section>
 
-      <h3>📊 Hafalan Hari Ini</h3>
+  <!-- ========================= -->
+  <!-- JALUR BELAJAR -->
+  <!-- ========================= -->
+  <section id="jalurPage" class="page">
+    <div class="header">
+      <h1>🗺️ Jalur Belajar</h1>
+      <p>Progres hafalan juz 30</p>
+    </div>
+    <div class="card">
+      <div class="surat-list">
+        <div class="surat-item" onclick="selectSurat('Al-Fatihah')">
+          <div class="surat-num">1</div>
+          <div class="surat-detail">
+            <strong>Al-Fatihah</strong>
+            <small>1/7 ayat</small>
+          </div>
+          <div class="surat-arabic">الفاتحة</div>
+        </div>
+        <div class="surat-item" onclick="selectSurat('Al-Ikhlas')">
+          <div class="surat-num">2</div>
+          <div class="surat-detail">
+            <strong>Al-Ikhlas</strong>
+            <small>0/4 ayat</small>
+          </div>
+          <div class="surat-arabic">الإخلاص</div>
+        </div>
+        <div class="surat-item" onclick="selectSurat('An-Nas')">
+          <div class="surat-num">3</div>
+          <div class="surat-detail">
+            <strong>An-Nas</strong>
+            <small>1/6 ayat</small>
+          </div>
+          <div class="surat-arabic">الناس</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <div class="progress-number">
-        0%
+  <!-- ========================= -->
+  <!-- PENGATURAN BLOK & ULANG (SETUP) -->
+  <!-- ========================= -->
+  <section id="setupPage" class="page">
+    <div class="top-bar">
+      <button class="back-btn" onclick="openPage('homePage')">←</button>
+      <h2>Latihan Hafalan</h2>
+    </div>
+
+    <div class="card">
+      <label class="section-label">PILIH BLOK (BOLEH >1)</label>
+      <div class="tab-group">
+        <button class="tab-btn active">Semua 1</button>
+        <button class="tab-btn">Sedang dihafal 0</button>
+        <button class="tab-btn">Belum dihafal 1</button>
       </div>
 
-      <div class="progress-bar">
+      <div class="block-card selected">
+        <input type="checkbox" checked id="block1">
+        <label for="block1">
+          <strong>Blok 1</strong> <small>Ayat 1-4</small>
+          <div class="badge-sub">diulang 0x</div>
+        </label>
+      </div>
 
-        <div
-          id="progressFill"
-          class="progress-fill">
+      <div class="setting-group">
+        <label class="section-label">ULANG TIAP AYAT</label>
+        <div class="option-grid">
+          <button class="opt-btn">1x</button>
+          <button class="opt-btn active">3x</button>
+          <button class="opt-btn">5x</button>
+          <button class="opt-btn">?</button>
+        </div>
+      </div>
+
+      <div class="setting-group">
+        <label class="section-label">ULANG BLOK</label>
+        <div class="option-grid">
+          <button class="opt-btn active">3x</button>
+          <button class="opt-btn">5x</button>
+          <button class="opt-btn">7x</button>
+          <button class="opt-btn">∞</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="startLatihan()">🚀 Mulai Latihan (1)</button>
+    </div>
+  </section>
+
+  <!-- ========================= -->
+  <!-- HALAMAN PEREKAMAN PER-AYAT -->
+  <!-- ========================= -->
+  <section id="recordPage" class="page">
+    <div class="top-bar">
+      <button class="back-btn" onclick="openPage('setupPage')">←</button>
+      <h2 id="recSuratTitle">Al-Ikhlas</h2>
+    </div>
+
+    <div class="card">
+      <p class="instruction-text">
+        Lafalkan dari ingatan. Rekam <strong>satu ayat</strong>, lalu tekan <strong>Ayat berikutnya</strong>.
+      </p>
+
+      <div class="record-progress-header">
+        <span class="section-label">NOMOR AYAT</span>
+        <span class="progress-count" id="recordedCountText">0/4 direkam</span>
+      </div>
+
+      <div class="status-legend">
+        <span class="legend-item"><i class="dot dot-gray"></i> Belum</span>
+        <span class="legend-item"><i class="dot dot-yellow"></i> Sekarang</span>
+        <span class="legend-item"><i class="dot dot-green"></i> Sudah direkam</span>
+      </div>
+
+      <!-- Grid Ayat -->
+      <div class="ayat-num-grid" id="ayatGrid">
+        <div class="ayat-num-btn active" id="ayatBtn-1">1</div>
+        <div class="ayat-num-btn" id="ayatBtn-2">2</div>
+        <div class="ayat-num-btn" id="ayatBtn-3">3</div>
+        <div class="ayat-num-btn" id="ayatBtn-4">4</div>
+      </div>
+
+      <!-- Bantuan Modal / Buttons -->
+      <div class="bantuan-box">
+        <div class="bantuan-title">
+          <span>BANTUAN</span>
+          <span class="current-ayat-badge" id="currentAyatBadge">Ayat 1</span>
+        </div>
+        <div class="bantuan-grid">
+          <button class="bantuan-btn" onclick="playCurrentQari()"><span class="icon">▶</span> Play ayat</button>
+          <button class="bantuan-btn" onclick="toggleLihatAyat()"><span class="icon">👁</span> Lihat ayat</button>
+          <button class="bantuan-btn" onclick="playAwalan()"><span class="icon">🎧</span> Play awalan</button>
+          <button class="bantuan-btn" onclick="toggleAwalanText()"><span class="icon">📄</span> Lihat awalan</button>
+        </div>
+      </div>
+
+      <!-- Text Peek Overlay -->
+      <div id="peekBox" class="peek-card" style="display: none;">
+        <small id="peekTitle">TEKS AYAT 1</small>
+        <div class="arabic-text" id="peekArabicText">قُلْ هُوَ اللَّهُ أَحَدٌ</div>
+      </div>
+
+      <!-- Dynamic Action Recording Bar -->
+      <div class="recording-action-card">
+        <div class="rec-status-line">
+          <span class="rec-dot" id="recDot"></span>
+          <strong id="recStatusText">Siap merekam Ayat 1/4</strong>
+          <span class="rec-timer" id="recTimer">00:00</span>
         </div>
 
+        <div class="waveform-anim" id="waveform" style="display: none;">
+          <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        </div>
+
+        <button id="mainRecBtn" class="btn btn-record" onclick="toggleRecordState()">
+          🎙️ Rekam Hafalanmu
+        </button>
       </div>
-
-      <p>
-        Belum ada ayat yang diselesaikan
-      </p>
-
     </div>
-
-
-    <div class="card">
-
-      <h3>📖 Lanjutkan Hafalan</h3>
-
-      <p>
-        Al-Fatihah
-      </p>
-
-      <p>
-        Ayat 1
-      </p>
-
-      <button
-        class="btn btn-primary"
-        onclick="openTahfidz()">
-
-        ▶️ Lanjutkan Hafalan
-
-      </button>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>🚀 Menu Belajar</h3>
-
-      <div class="menu-grid">
-
-        <button
-          class="menu-btn"
-          onclick="openTahfidz()">
-
-          <span>📖</span>
-
-          Tahfidz
-
-        </button>
-
-
-        <button
-          class="menu-btn"
-          onclick="openMurottal()">
-
-          <span>🎧</span>
-
-          Murottal
-
-        </button>
-
-
-        <button
-          class="menu-btn"
-          onclick="openRecorder()">
-
-          <span>🎙️</span>
-
-          Rekam
-
-        </button>
-
-
-        <button
-          class="menu-btn"
-          onclick="openTahfidz()">
-
-          <span>🧠</span>
-
-          Latihan
-
-        </button>
-
-      </div>
-
-    </div>
-
   </section>
 
-
   <!-- ========================= -->
-  <!-- TAHFIDZ -->
+  <!-- LAPORAN & KOREKSI HASIL -->
   <!-- ========================= -->
-
-  <section
-    id="tahfidzPage"
-    class="page">
-
-    <div class="header">
-
-      <h1>📖 Tahfidz</h1>
-
-      <p>
-        Latihan menghafal Al-Qur'an
-      </p>
-
+  <section id="resultPage" class="page">
+    <div class="top-bar">
+      <button class="back-btn" onclick="openPage('homePage')">←</button>
+      <h2>Hasil Uji Hafalan</h2>
     </div>
 
+    <div class="card result-summary-card">
+      <span class="score-label">Cakupan Bacaan</span>
+      <div class="score-number">100%</div>
+      <div class="badge-success">✔ Bacaanmu Sudah Lengkap!</div>
+      <p class="score-desc">
+        Cakupan = durasi bacaanmu sebanding dengan Qari. Akurasi & tajwid dikoreksi teliti.
+      </p>
+    </div>
 
     <div class="card">
+      <h3>KOREKSI PER AYAT</h3>
 
-      <h3>📚 Pilih Surat</h3>
-
-      <button
-        class="btn btn-blue"
-        onclick="pilihSurat('Al-Fatihah')">
-
-        Al-Fatihah
-
-      </button>
-
-
-      <button
-        class="btn btn-blue"
-        onclick="pilihSurat('Al-Ikhlas')">
-
-        Al-Ikhlas
-
-      </button>
-
-
-      <button
-        class="btn btn-blue"
-        onclick="pilihSurat('An-Nas')">
-
-        An-Nas
-
-      </button>
-
-    </div>
-
-
-    <div
-      id="ayatBox"
-      class="card"
-      style="display:none;">
-
-      <h3 id="namaSurat">
-        Al-Fatihah
-      </h3>
-
-
-      <div
-        id="ayatText"
-        class="ayat">
-
-        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-
+      <div class="kor-item">
+        <div class="kor-header">
+          <strong>Ayat 1</strong>
+          <span class="kor-badge">✔ 100%</span>
+        </div>
+        <div class="arabic-text">قُلْ هُوَ اللَّهُ أَحَدٌ</div>
+        <div class="audio-player-row">
+          <small>Kamu:</small>
+          <audio controls id="userAudio1"></audio>
+        </div>
+        <div class="audio-player-row">
+          <small>Qari:</small>
+          <button class="btn-sm" onclick="playAudioDemo()">Dengar qari ayat ini</button>
+        </div>
       </div>
 
+      <div class="kor-item">
+        <div class="kor-header">
+          <strong>Ayat 2</strong>
+          <span class="kor-badge">✔ 100%</span>
+        </div>
+        <div class="arabic-text">اللَّهُ الصَّمَدُ</div>
+      </div>
 
-      <button
-        class="btn btn-orange"
-        onclick="toggleAyat()">
-
-        👁️ Sembunyikan Ayat
-
-      </button>
-
-
-      <button
-        class="btn btn-blue"
-        onclick="openMurottal()">
-
-        🎧 Dengarkan Murottal
-
-      </button>
-
-
-      <button
-        class="btn btn-primary"
-        onclick="openRecorder()">
-
-        🎙️ Rekam Hafalan
-
-      </button>
-
+      <button class="btn btn-primary btn-full" onclick="openPage('homePage')">Selesai & Simpan</button>
     </div>
-
   </section>
 
-
   <!-- ========================= -->
-  <!-- MUROTTAL -->
+  <!-- MUROTTAL & QARI SELECTOR -->
   <!-- ========================= -->
-
-  <section
-    id="murottalPage"
-    class="page">
-
-    <div class="header">
-
-      <h1>🎧 Murottal</h1>
-
-      <p>
-        Dengarkan sebelum menghafal
-      </p>
-
+  <section id="murottalPage" class="page">
+    <div class="top-bar">
+      <button class="back-btn" onclick="openPage('homePage')">←</button>
+      <h2>Pilih Qari Murottal</h2>
     </div>
-
-
     <div class="card">
-
-      <h3>🎙️ Murottal Syekh</h3>
-
-      <p>
-        Audio pembanding hafalan
-      </p>
-
-
-      <div class="audio-box">
-
-        <audio
-          id="murottalPlayer"
-          controls>
-
-        </audio>
-
+      <div class="qari-list">
+        <div class="qari-item selected" onclick="selectQari(this, 'Misyari Al-Afasy')">
+          <span>Misyari Al-Afasy</span>
+          <span class="check">✓</span>
+        </div>
+        <div class="qari-item" onclick="selectQari(this, 'Abdul Basith Abdus Shamad')">
+          <span>Abdul Basith Abdus Shamad</span>
+          <span class="check"></span>
+        </div>
+        <div class="qari-item" onclick="selectQari(this, 'Abdurrahman As-Sudais')">
+          <span>Abdurrahman As-Sudais</span>
+          <span class="check"></span>
+        </div>
+        <div class="qari-item" onclick="selectQari(this, 'Mahmud Al-Hushari')">
+          <span>Mahmud Al-Hushari</span>
+          <span class="check"></span>
+        </div>
       </div>
-
-
-      <p class="info">
-
-        Audio murottal akan kita masukkan
-        setelah struktur aplikasi selesai.
-
-      </p>
-
     </div>
-
-
-    <div class="card">
-
-      <h3>🔁 Metode Menghafal</h3>
-
-      <p>
-
-        1. Dengarkan ayat.
-
-      </p>
-
-      <p>
-
-        2. Perhatikan teks ayat.
-
-      </p>
-
-      <p>
-
-        3. Ulangi bersama murottal.
-
-      </p>
-
-      <p>
-
-        4. Sembunyikan ayat.
-
-      </p>
-
-      <p>
-
-        5. Rekam hafalan.
-
-      </p>
-
-    </div>
-
   </section>
-
-
-  <!-- ========================= -->
-  <!-- RECORDER -->
-  <!-- ========================= -->
-
-  <section
-    id="recorderPage"
-    class="page">
-
-    <div class="header">
-
-      <h1>🎙️ Rekam Hafalan</h1>
-
-      <p>
-        Rekam hafalanmu
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div
-        id="recordStatus"
-        class="record-status">
-
-        🎤 Siap merekam
-
-      </div>
-
-
-      <div
-        id="recordTimer"
-        class="timer">
-
-        00:00
-
-      </div>
-
-
-      <button
-        id="startRecordBtn"
-        class="btn btn-red"
-        onclick="startRecording()">
-
-        🎙️ Mulai Rekam
-
-      </button>
-
-
-      <button
-        id="stopRecordBtn"
-        class="btn btn-orange"
-        onclick="stopRecording()"
-        disabled>
-
-        ⏹️ Selesai Rekam
-
-      </button>
-
-
-      <button
-        class="btn btn-gray"
-        onclick="resetRecording()">
-
-        🔄 Rekam Ulang
-
-      </button>
-
-
-      <div
-        id="recordResult"
-        style="display:none;">
-
-        <h3>
-          🎧 Hasil Rekaman
-        </h3>
-
-
-        <audio
-          id="recordedAudio"
-          controls>
-        </audio>
-
-      </div>
-
-
-      <div
-        id="recordError"
-        style="
-        display:none;
-        margin-top:15px;
-        padding:15px;
-        border-radius:15px;
-        background:#ffe5e5;
-        color:#b42318;
-        ">
-
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>💡 Cara Menghafal</h3>
-
-      <p>
-        Dengarkan ayat terlebih dahulu.
-      </p>
-
-      <p>
-        Kemudian coba membaca tanpa melihat teks.
-      </p>
-
-      <p>
-        Setelah siap, tekan tombol
-        <strong>Mulai Rekam</strong>.
-      </p>
-
-    </div>
-
-  </section>
-
 
   <!-- ========================= -->
   <!-- BOTTOM NAVIGATION -->
   <!-- ========================= -->
-
   <nav class="bottom-nav">
-
-    <button
-      class="nav-btn"
-      onclick="openHome()">
-
-      🏠
-      <small>Beranda</small>
-
+    <button class="nav-btn active" onclick="openPage('homePage')">
+      🏠 <small>Beranda</small>
     </button>
-
-
-    <button
-      class="nav-btn"
-      onclick="openTahfidz()">
-
-      📖
-      <small>Tahfidz</small>
-
+    <button class="nav-btn" onclick="openPage('jalurPage')">
+      🗺️ <small>Jalur</small>
     </button>
-
-
-    <button
-      class="nav-btn"
-      onclick="openMurottal()">
-
-      🎧
-      <small>Murottal</small>
-
+    <button class="nav-btn" onclick="openPage('setupPage')">
+      📖 <small>Tahfidz</small>
     </button>
-
-
-    <button
-      class="nav-btn"
-      onclick="openRecorder()">
-
-      🎙️
-      <small>Rekam</small>
-
+    <button class="nav-btn" onclick="openPage('murottalPage')">
+      🎧 <small>Qari</small>
     </button>
-
   </nav>
 
 </div>
 
-
 <script src="script.js"></script>
-
 </body>
-
 </html>
